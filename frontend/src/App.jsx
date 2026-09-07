@@ -7,14 +7,14 @@ import SignInForm from './pages/signin';
 import AddCustomer from './pages/Customers';
 import Dashboard from './pages/Dashboard';
 import Layouts from './pages/Layouts';
-import Sales from './pages/Sales'; // <-- 1. Import your Sales/POS page component
+import Sales from './pages/Sales'; 
 
 function AppRoutes() {
   const navigate = useNavigate();
 
   const handleAuthSuccess = () => {
     console.log("User authorized successfully!");
-    navigate('/pos'); // <-- 2. Automatically guide them straight to POS on login!
+    navigate('/dashboard'); // <-- Corrected to navigate straight to the Dashboard on login
   };
 
   return (
@@ -28,10 +28,8 @@ function AppRoutes() {
       {/* Layout Wrapper: Adds desktop sidebar and mobile bottom navigation to these routes */}
       <Route element={<Layouts />}>
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/pos" element={<Sales />} /> {/* <-- 3. Add the POS route mapped to your Sales.jsx file */}
+        <Route path="/pos" element={<Sales />} /> 
         <Route path="/customers" element={<AddCustomer />} />
-        {/* You can add other sidebar pages here too: */}
-        {/* <Route path="/inventory/products" element={<Inventory />} /> */}
       </Route>
 
       <Route 
