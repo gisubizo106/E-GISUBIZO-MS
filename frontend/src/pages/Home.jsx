@@ -317,7 +317,7 @@ const Home = ({ onNavigate }) => {
           <h2 className="text-4xl md:text-5xl font-bold mb-6">{t.whyTitle}</h2>
           <p className="text-gray-500 max-w-3xl mx-auto mb-16">{t.whyDesc}</p>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 bg-green-50 p-8 rounded-3xl">
             <FeatureCard icon={<Package className="w-7 h-7" />} title={t.inventoryTitle} desc={t.inventoryDesc} />
             <FeatureCard icon={<BarChart3 className="w-7 h-7" />} title={t.reportTitle} desc={t.reportDesc} />
             <FeatureCard icon={<Shield className="w-7 h-7" />} title={t.secureTitle} desc={t.secureDesc} />
@@ -326,7 +326,7 @@ const Home = ({ onNavigate }) => {
       </section>
 
       {/* ================= HOW IT WORKS ================= */}
-      <section id="how-it-works" className="py-24 bg-gray-50">
+      <section id="how-it-works" className="py-24 bg-blue-50">
         <div className="container mx-auto px-4 md:px-8 text-center">
           <h2 className="text-4xl font-bold mb-6">{t.hiwTitle}</h2>
           <p className="text-gray-500 max-w-2xl mx-auto mb-16">{t.hiwDesc}</p>

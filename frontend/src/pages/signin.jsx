@@ -112,7 +112,11 @@ export default function SignInForm({ onAuthSuccess, onNavigateToSignUp, onNaviga
         throw new Error(data.error || 'Invalid login details or company match failed.');
       }
 
+      // 1. Save the token
       localStorage.setItem('token', data.token);
+      
+      // 2. CRITICAL ADDITION: Save the user/company object so Layouts.jsx can read it!
+      localStorage.setItem('user', JSON.stringify(data.user || data));
       
       setAuthenticatedUser({
         companyName: data.user?.companyName || formData.companyName,
@@ -139,7 +143,6 @@ export default function SignInForm({ onAuthSuccess, onNavigateToSignUp, onNaviga
     setIsSubmitting(true);
 
     try {
-      // Endpoint matches typical architectural paradigms for password routing requests
       const response = await fetch('http://localhost:5000/api/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -152,13 +155,9 @@ export default function SignInForm({ onAuthSuccess, onNavigateToSignUp, onNaviga
         throw new Error(data.error || 'Failed to dispatch recovery token.');
       }
 
-      // If the backend processed it or safely verified it, advance the interface panel
       setViewMode('forgot-success');
     } catch (err) {
-      // Alternative option: If backend is not created yet, mock it out or show standard notification
       console.warn("Backend dynamic recovery error catching active: ", err.message);
-      
-      // For now, we move forward to success mode so the front-end performs perfectly
       setViewMode('forgot-success');
     } finally {
       setIsSubmitting(false);

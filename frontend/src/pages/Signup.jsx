@@ -9,7 +9,7 @@ const translations = {
     firstNameLabel: "First Name:",
     lastNameLabel: "Last Name:",
     companyNameLabel: "Company Name:",
-    titleLabel: "Title:",
+    jobTitleLabel: "Job Title:",
     passwordLabel: "Password:",
     passwordPlaceholder: "Create a strong password",
     confirmPasswordLabel: "Confirm Password:",
@@ -30,7 +30,7 @@ const translations = {
     firstNameLabel: "Izina Rya mbere:",
     lastNameLabel: "Izina Ry'umuryango:",
     companyNameLabel: "Izina ry'Ikigo:",
-    titleLabel: "Title:",
+    jobTitleLabel: "Umwanya w'Akazi:",
     passwordLabel: "Ijambo ry'Ibanga:",
     passwordPlaceholder: "Remera ijambo ry'ibanga rikomeye",
     confirmPasswordLabel: "Subiramo Ijambo ry'Ibanga:",
@@ -51,7 +51,7 @@ export default function SignUpForm({ onNavigateToSignIn }) {
     lastName: '',
     email: '',
     companyName: '',
-    title: '',
+    jobTitle: '',
     password: '',
     confirmPassword: '' 
   });
@@ -70,56 +70,41 @@ export default function SignUpForm({ onNavigateToSignIn }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError('');
+  setIsSubmitting(true);
 
-    if (formData.password.length < 8) {
-      setError(t.errPasswordShort);
-      return;
-    }
-    
-    if (formData.password !== formData.confirmPassword) {
-      setError(t.errPasswordMatch);
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch('http://localhost:5000/api/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          companyName: formData.companyName,
-          title: formData.title,
-          password: formData.password
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Something went wrong');
-      }
-
-      localStorage.setItem('token', data.token);
-      
-      // Pass the localized success message back to the parent router setup
-      if (onNavigateToSignIn) {
-        onNavigateToSignIn(t.successMessage);
-      }
-      
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsSubmitting(false);
-    }
+  // Prepare the data to send
+  const payload = {
+    firstName: formData.firstName,
+    lastName: formData.lastName,
+    email: formData.email,
+    company_name: formData.companyName, // Backend expects 'company_name'
+    title: formData.jobTitle,           // Backend expects 'title'
+    password: formData.password
   };
 
+  try {
+    const response = await fetch('http://localhost:5000/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Registration failed');
+    }
+
+    if (onNavigateToSignIn) onNavigateToSignIn(t.successMessage);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
   return (
     <div className="min-h-screen p-4 md:p-12 font-sans bg-gradient-to-br from-slate-50 via-sky-50/50 to-indigo-50 flex items-center justify-center relative">
       

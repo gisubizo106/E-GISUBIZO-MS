@@ -4,13 +4,17 @@ import Home from './pages/Home';
 import SignUpForm from './pages/signup'; 
 import SplashScreen from './pages/screen'; 
 import SignInForm from './pages/signin';
+import AddCustomer from './pages/Customers';
+import Dashboard from './pages/Dashboard';
+import Layouts from './pages/Layouts';
+import Sales from './pages/Sales'; // <-- 1. Import your Sales/POS page component
 
 function AppRoutes() {
   const navigate = useNavigate();
 
   const handleAuthSuccess = () => {
     console.log("User authorized successfully!");
-    navigate('/home'); 
+    navigate('/pos'); // <-- 2. Automatically guide them straight to POS on login!
   };
 
   return (
@@ -21,6 +25,15 @@ function AppRoutes() {
       {/* Standard App Pages */}
       <Route path="/home" element={<Home onNavigate={(targetView) => navigate(`/${targetView}`)} />} />
       
+      {/* Layout Wrapper: Adds desktop sidebar and mobile bottom navigation to these routes */}
+      <Route element={<Layouts />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/pos" element={<Sales />} /> {/* <-- 3. Add the POS route mapped to your Sales.jsx file */}
+        <Route path="/customers" element={<AddCustomer />} />
+        {/* You can add other sidebar pages here too: */}
+        {/* <Route path="/inventory/products" element={<Inventory />} /> */}
+      </Route>
+
       <Route 
         path="/signup" 
         element={
@@ -42,7 +55,6 @@ function AppRoutes() {
           <SignInForm 
             onAuthSuccess={handleAuthSuccess} 
             onNavigateToSignUp={() => navigate('/signup')}
-            // Linked to prevent routing failures when clicking Forgot Password
             onNavigateToForgotPassword={() => console.log("Forgot password overlay activated.")}
           />
         } 
